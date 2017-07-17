@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME = parsedatetime
+
+ifneq (,$(findstring nocheck,$(DEB_BUILD_PROFILES)))
+export PYBUILD_DISABLE = test
+else
+export PYBUILD_BEFORE_TEST = cp -r {dir}/tests {build_dir}
+export PYBUILD_TEST_ARGS = tests/Test*.py
+export PYBUILD_AFTER_TEST = rm -rf {build_dir}/tests
+endif
+
+%:
+	dh $@ --with python2,python3 --buildsystem pybuild
